@@ -600,7 +600,7 @@ class Gridliner:
                         for i, (pt0, pt1) in enumerate([tail, head]):
                             kw, angle, loc = self._segment_to_text_specs(
                                 pt0, pt1, lonlat)
-                            if not getattr(self, loc+'_labels'):
+                            if not getattr(self, loc + '_labels'):
                                 continue
                             kw.update(label_style,
                                       bbox={'pad': 0, 'visible': False})
@@ -646,7 +646,7 @@ class Gridliner:
         """Get appropriate kwargs for a label from lon or lat line segment"""
         x0, y0 = pt0
         x1, y1 = pt1
-        angle = np.arctan2(y0-y1, x0-x1) * 180 / np.pi
+        angle = np.arctan2(y0 - y1, x0 - x1) * 180 / np.pi
         kw, loc = self._segment_angle_to_text_specs(angle, lonlat)
         return kw, angle, loc
 
@@ -679,11 +679,11 @@ class Gridliner:
 
         elif angle > 45:
             loc = 'top'
-            kw.update(ha='center', va='bottom', rotation=angle-90)
+            kw.update(ha='center', va='bottom', rotation=angle - 90)
 
         else:
             loc = 'bottom'
-            kw.update(ha='center', va='top', rotation=angle+90)
+            kw.update(ha='center', va='top', rotation=angle + 90)
 
         return kw, loc
 
@@ -709,6 +709,11 @@ class Gridliner:
                 self.axes.transData, self.axes.figure,
                 x=dx, y=dy, units='points')
             kw.update(transform=transform)
+
+            if ypadding < 0:
+                kw['ha'] = 'left' if kw['ha'] == 'right' else 'right'
+            if xpadding < 0:
+                kw['va'] = 'bottom' if kw['va'] == 'top' else 'top'
 
         return kw, loc
 
@@ -760,7 +765,7 @@ class Gridliner:
                           'va': artist.get_va()}
             # Compute angles to try
             angles = [None]
-            for abs_delta_angle in np.arange(delta_angle, max_delta_angle+1,
+            for abs_delta_angle in np.arange(delta_angle, max_delta_angle + 1,
                                              delta_angle):
                 angles.append(artist._angle + abs_delta_angle)
                 angles.append(artist._angle - abs_delta_angle)
@@ -799,6 +804,10 @@ class Gridliner:
                                         .transformed(self.axes.transData))
                         if '3.1.0' <= matplotlib.__version__ <= '3.1.2':
                             outline_path = remove_path_dupes(outline_path)
+
+                    # Draw labels on top of map
+                    is_filled = False if self.xpadding < 0 or self.ypadding < 0 else True
+
                     # Inline must be within the map.
                     if ((lonlat == 'lon' and self.x_inline) or
                             (lonlat == 'lat' and self.y_inline)):
@@ -807,7 +816,7 @@ class Gridliner:
                         if outline_path.contains_point(center):
                             visible = True
                     # Non-inline must not run through the outline.
-                    elif not outline_path.intersects_path(this_path):
+                    elif not outline_path.intersects_path(this_path, filled=is_filled):
                         visible = True
 
                     # Good
