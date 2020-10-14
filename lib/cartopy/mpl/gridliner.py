@@ -784,6 +784,7 @@ class Gridliner:
                 this_patch = artist.get_bbox_patch()
                 this_path = this_patch.get_path().transformed(
                     this_patch.get_transform())
+
                 if '3.1.0' <= matplotlib.__version__ <= '3.1.2':
                     this_path = remove_path_dupes(this_path)
                 center = artist.get_transform().transform_point(
@@ -805,7 +806,7 @@ class Gridliner:
                         if '3.1.0' <= matplotlib.__version__ <= '3.1.2':
                             outline_path = remove_path_dupes(outline_path)
 
-                    # Draw labels on top of map
+                    # Draw non-inline labels on top of map
                     is_filled = False if self.xpadding < 0 or self.ypadding < 0 else True
 
                     # Inline must be within the map.
@@ -815,9 +816,13 @@ class Gridliner:
                         # clipping can be left to it.
                         if outline_path.contains_point(center):
                             visible = True
-                    # Non-inline must not run through the outline.
                     elif not outline_path.intersects_path(this_path, filled=is_filled):
                         visible = True
+
+                    if self.xpadding < 0 or self.ypadding < 0:
+                        # labels must be within map bbox
+                        if not this_path.intersects_path(outline_path):
+                            visible = False
 
                     # Good
                     if visible:
