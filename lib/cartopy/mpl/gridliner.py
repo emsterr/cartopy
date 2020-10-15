@@ -807,7 +807,11 @@ class Gridliner:
                             outline_path = remove_path_dupes(outline_path)
 
                     # Draw non-inline labels on top of map
-                    is_filled = False if self.xpadding < 0 or self.ypadding < 0 else True
+                    is_filled = (
+                        False
+                        if self.xpadding < 0 or self.ypadding < 0 else
+                        True
+                    )
 
                     # Inline must be within the map.
                     if ((lonlat == 'lon' and self.x_inline) or
@@ -816,7 +820,8 @@ class Gridliner:
                         # clipping can be left to it.
                         if outline_path.contains_point(center):
                             visible = True
-                    elif not outline_path.intersects_path(this_path, filled=is_filled):
+                    elif not outline_path.intersects_path(this_path,
+                                                          filled=is_filled):
                         visible = True
 
                     if self.xpadding < 0 or self.ypadding < 0:

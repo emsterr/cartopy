@@ -129,7 +129,11 @@ if MPL_VERSION < "3":
     TOL = 15
 else:
     TOL = 0.5
-grid_label_tol = grid_label_inline_tol = grid_label_inline_usa_tol = grid_label_intersect_map_tol = TOL
+grid_label_tol = \
+    grid_label_inline_tol =\
+    grid_label_inline_usa_tol =\
+    grid_label_intersect_map_tol = TOL
+
 grid_label_inline_tol += 1.1
 grid_label_image = 'gridliner_labels'
 grid_label_inline_image = 'gridliner_labels_inline'
@@ -399,3 +403,4 @@ def test_grid_labels_intersect_map():
             gl.ypadding = -5
         ax.coastlines(resolution="110m")
     plt.subplots_adjust(wspace=0.35, hspace=0.35)
+
