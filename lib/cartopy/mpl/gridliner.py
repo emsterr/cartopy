@@ -711,9 +711,15 @@ class Gridliner:
             kw.update(transform=transform)
 
             if ypadding < 0:
-                kw['ha'] = 'left' if kw['ha'] == 'right' else 'right'
+                if kw['ha'] == 'left':
+                    kw['ha'] = 'right'
+                elif kw['ha'] == 'right':
+                    kw['ha'] = 'left'
             if xpadding < 0:
-                kw['va'] = 'bottom' if kw['va'] == 'top' else 'top'
+                if kw['va'] == 'top':
+                    kw['va'] = 'bottom'
+                elif kw['va'] == 'bottom':
+                    kw['va'] = 'top'
 
         return kw, loc
 
