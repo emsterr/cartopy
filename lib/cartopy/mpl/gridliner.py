@@ -271,7 +271,8 @@ class Gridliner:
         #: for styling of the text labels.
         self.ylabel_style = {}
 
-        self.label_bbox_props = {}
+        # bbox style for grid labels
+        self.labels_bbox_style = {}
 
         #: The padding from the map edge to the x labels in points.
         self.xpadding = 5
@@ -512,9 +513,6 @@ class Gridliner:
         if self.y_inline:
             x_midpoints = self._find_midpoints(lon_lim, lon_ticks)
 
-        print(self.ylabel_style)
-        print(self.label_bbox_props)
-
         for lonlat, lines, line_ticks, formatter, label_style in (
                 ('lon', lon_lines, lon_ticks,
                  self.xformatter, self.xlabel_style),
@@ -600,12 +598,6 @@ class Gridliner:
                         continue
                     del intersection
 
-                    labels_bbox_props = {
-                        'pad': 0,
-                        'visible': True if self.label_bbox_props is not {} else False,
-                        **(self.label_bbox_props if self.label_bbox_props is not {} else {}),
-                    }
-
                     # Loop on head and tail and plot label by extrapolation
                     for tail, head in zip(tails, heads):
                         for i, (pt0, pt1) in enumerate([tail, head]):
@@ -614,7 +606,16 @@ class Gridliner:
                             if not getattr(self, loc + '_labels'):
                                 continue
                             kw.update(label_style,
-                                      bbox=labels_bbox_props)
+                                      bbox={
+                                          'pad': 0,
+                                          'visible': True if
+                                          self.labels_bbox_style is not {}
+                                          else False,
+                                          **(
+                                              self.labels_bbox_style if
+                                              self.labels_bbox_style is not
+                                              {} else {}),
+                                      })
                             text = formatter(tick_value)
 
                             if self.y_inline and lonlat == 'lat':
