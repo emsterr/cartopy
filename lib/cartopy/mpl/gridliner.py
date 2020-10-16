@@ -271,6 +271,9 @@ class Gridliner:
         #: for styling of the text labels.
         self.ylabel_style = {}
 
+        # bbox style for grid labels
+        self.labels_bbox_style = {}
+
         #: The padding from the map edge to the x labels in points.
         self.xpadding = 5
 
@@ -603,7 +606,11 @@ class Gridliner:
                             if not getattr(self, loc + '_labels'):
                                 continue
                             kw.update(label_style,
-                                      bbox={'pad': 0, 'visible': False})
+                                      bbox={
+                                          'pad': 0,
+                                          'visible': True if self.labels_bbox_style is not {} else False,
+                                          **(self.labels_bbox_style if self.labels_bbox_style is not {} else {}),
+                                      })
                             text = formatter(tick_value)
 
                             if self.y_inline and lonlat == 'lat':
