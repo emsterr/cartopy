@@ -130,8 +130,8 @@ if MPL_VERSION < "3":
 else:
     TOL = 0.5
 grid_label_tol = \
-    grid_label_inline_tol =\
-    grid_label_inline_usa_tol =\
+    grid_label_inline_tol = \
+    grid_label_inline_usa_tol = \
     grid_label_intersect_map_tol = TOL
 
 grid_label_inline_tol += 1.1
@@ -368,6 +368,7 @@ def test_gridliner_line_limits():
         assert (np.min(path.vertices, axis=0) >= (xlim[0], ylim[0])).all()
         assert (np.max(path.vertices, axis=0) <= (xlim[1], ylim[1])).all()
 
+
 @pytest.mark.natural_earth
 @ImageTesting([grid_label_intersect_map_image],
               tolerance=grid_label_intersect_map_tol)
@@ -389,10 +390,10 @@ def test_grid_labels_intersect_map():
             pass
         ax.set_title(proj, y=1.075)
         if ccrs.PROJ4_VERSION[:2] == (5, 0) and proj in (
-            ccrs.Orthographic,
-            ccrs.AlbersEqualArea,
-            ccrs.Geostationary,
-            ccrs.NearsidePerspective,
+                ccrs.Orthographic,
+                ccrs.AlbersEqualArea,
+                ccrs.Geostationary,
+                ccrs.NearsidePerspective,
         ):
             # Above projections are broken, so skip labels.
             # Add gridlines anyway to minimize image differences.
@@ -403,4 +404,3 @@ def test_grid_labels_intersect_map():
             gl.ypadding = -5
         ax.coastlines(resolution="110m")
     plt.subplots_adjust(wspace=0.35, hspace=0.35)
-
